@@ -21,7 +21,7 @@ def calculate_annual_cash_flow(j_return, battery_size, cost_per_kWh, time_period
 
 def main():
     st.sidebar.title("Einstellungen")
-    # Collecting user input from the sidebar
+    # Collecting user input from the sidebar 
     battery_size = st.sidebar.slider("Batteriegroesse (kWh)", 100, 1500, 800)
     c_rate = st.sidebar.slider("C-rate", 0.25, 1.5, 0.25,0.25)
     j_return = st.sidebar.slider("Return pro 100 kW (CHF)", 5000, 20000, 12500)
