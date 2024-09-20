@@ -1,9 +1,6 @@
 
-kiwisolver==1.4.7
-matplotlib==3.9.2
-mkl-service==2.4.0
-
-numpy-financial==1.0.0
-plotly==5.24.1
-
+streamlit
+numpy
+plotly
+numpy_financial
 
