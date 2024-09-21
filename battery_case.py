@@ -10,11 +10,11 @@ def calculate_irr_npv(cash_flows, rate):
     net_present_value = npv(rate, cash_flows) if len(cash_flows) > 0 else 0
     return internal_rate_of_return, net_present_value
 
-def calculate_annual_cash_flow(j_return, battery_size, cost_per_kWh, time_period, pooler_cut,c_rate):
+def calculate_annual_cash_flow(j_return, battery_size, cost_per_kWh, time_period, pooler_cut, c_rate, invest_grid):
     # Calculate the initial investment
-    initial_investment = -battery_size * cost_per_kWh
+    initial_investment = -battery_size * cost_per_kWh + invest_grid
     # Calculate the net annual return after Pooler Cut
-    net_annual_return = j_return/100*c_rate*battery_size * (1 - pooler_cut / 100)
+    net_annual_return = j_return / 100 * c_rate * battery_size * (1 - pooler_cut / 100)
     # List of cash flows starting with the initial investment
     cash_flows = [initial_investment] + [net_annual_return for _ in range(time_period)]
     return cash_flows
@@ -23,17 +23,16 @@ def main():
     st.sidebar.title("Einstellungen")
     # Collecting user input from the sidebar 
     battery_size = st.sidebar.slider("Batteriegroesse (kWh)", 100, 1500, 800)
-    c_rate = st.sidebar.slider("C-rate", 0.25, 1.5, 0.25,0.25)
+    c_rate = st.sidebar.slider("C-rate", 0.25, 1.5, 0.25, 0.25)
+    invest_grid = st.sidebar.slider("Invest Netz", 0, 200000, 0, 10000)
     j_return = st.sidebar.slider("Return pro 100 kW (CHF)", 5000, 20000, 12500)
     cost_per_kWh = st.sidebar.slider("Kosten pro kWh (CHF)", 100, 800, 250, 50)
     pooler_cut = st.sidebar.slider("Pooler Cut (%)", 0, 35, 20)
     rate_of_return = st.sidebar.slider("Rendite (%)", 0.0, 15.0, 7.5, step=0.1) / 100
     time_period = st.sidebar.slider("Betrachtungszeitraum (Jahre)", 0, 10, 5)
 
-    submit_button = st.sidebar.button("Berechnen")
-
-    if submit_button and time_period > 0:
-        cash_flows = calculate_annual_cash_flow(j_return, battery_size, cost_per_kWh, time_period, pooler_cut,c_rate)
+    if time_period > 0:
+        cash_flows = calculate_annual_cash_flow(j_return, battery_size, cost_per_kWh, time_period, pooler_cut, c_rate, invest_grid)
         irr_value, npv_value = calculate_irr_npv(cash_flows, rate_of_return)
         
         # Determine color based on values
@@ -50,7 +49,7 @@ def main():
         fig = go.Figure(data=[go.Scatter(x=list(range(-1, time_period)), y=cash_flows, mode='lines+markers')])
         fig.update_layout(title='Annual Cash Flow Over Time', xaxis_title='Years', yaxis_title='Cash Flow (€)')
         st.plotly_chart(fig, use_container_width=True)
-    elif submit_button:
+    else:
         st.error("Bitte waehlen Sie einen Betrachtungszeitraum groesser als 0 Jahre.")
 
 if __name__ == "__main__":
