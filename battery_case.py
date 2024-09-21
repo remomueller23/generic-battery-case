@@ -49,17 +49,33 @@ def main():
         with col2:
             st.metric(label="Netto-Gegenwartswert (NPV)", value=f"CHF {npv_value:.2f}", delta=None, delta_color=npv_color)
         
-        # Creating a plot using Plotly
-        fig = go.Figure()
+        # Plotting cumulative cash flow
+        fig_cumulative = go.Figure()
+        fig_cumulative.add_trace(go.Scatter(x=list(range(-1, time_period)), y=cumulative_cash_flows, mode='lines+markers', name='Cumulative Cash Flow'))
+        fig_cumulative.update_layout(
+            title='Cumulative Cash Flow Over Time',
+            xaxis_title='Years',
+            yaxis_title='Cumulative Cash Flow (CHF)',
+            shapes=[dict(
+                type='line',
+                yref='y', y0=0, y1=0,
+                xref='paper', x0=0, x1=1,
+                line=dict(color='black', width=2)  # Fat line at y=0
+            )]
+        )
+        st.plotly_chart(fig_cumulative, use_container_width=True)
 
         # Plotting annual cash flow
-        fig.add_trace(go.Scatter(x=list(range(-1, time_period)), y=cash_flows, mode='lines+markers', name='Annual Cash Flow'))
+        fig_annual = go.Figure()
+        fig_annual.add_trace(go.Scatter(x=list(range(-1, time_period)), y=cash_flows, mode='lines+markers', name='Annual Cash Flow'))
+        fig_annual.update_layout(
+            title='Annual Cash Flow Over Time',
+            xaxis_title='Years',
+            yaxis_title='Annual Cash Flow (CHF)',
+            
+        )
+        st.plotly_chart(fig_annual, use_container_width=True)
 
-        # Plotting cumulative cash flow
-        fig.add_trace(go.Scatter(x=list(range(-1, time_period)), y=cumulative_cash_flows, mode='lines+markers', name='Cumulative Cash Flow'))
-
-        fig.update_layout(title='Annual and Cumulative Cash Flow Over Time', xaxis_title='Years', yaxis_title='Cash Flow (CHF)')
-        st.plotly_chart(fig, use_container_width=True)
     else:
         st.error("Bitte waehlen Sie einen Betrachtungszeitraum groesser als 0 Jahre.")
 
