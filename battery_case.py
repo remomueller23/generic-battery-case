@@ -24,7 +24,7 @@ def main():
     st.sidebar.title("Einstellungen")
     # Collecting user input from the sidebar 
     battery_size = st.sidebar.slider("Batteriegroesse (kWh)", 100, 1500, 800)
-    c_rate = st.sidebar.slider("C-rate", 0.25, 1.5, 0.25, 0.25)
+    c_rate = st.sidebar.slider("C-rate", 0.25, 1.5, 0.25, 0.75)
     invest_grid = st.sidebar.slider("Invest Netz", 0, 300000, 0, 10000)
     j_return = st.sidebar.slider("Return pro 100 kW (CHF)", 5000, 30000, 12500,2500)
     cost_per_kWh = st.sidebar.slider("Kosten pro kWh (CHF)", 100, 800, 250, 50)
