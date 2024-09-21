@@ -12,7 +12,7 @@ def calculate_irr_npv(cash_flows, rate):
 
 def calculate_annual_cash_flow(j_return, battery_size, cost_per_kWh, time_period, pooler_cut, c_rate, invest_grid):
     # Calculate the initial investment
-    initial_investment = -battery_size * cost_per_kWh + invest_grid
+    initial_investment = -battery_size * cost_per_kWh - invest_grid
     # Calculate the net annual return after Pooler Cut
     net_annual_return = j_return / 100 * c_rate * battery_size * (1 - pooler_cut / 100)
     # List of cash flows starting with the initial investment
@@ -35,6 +35,9 @@ def main():
         cash_flows = calculate_annual_cash_flow(j_return, battery_size, cost_per_kWh, time_period, pooler_cut, c_rate, invest_grid)
         irr_value, npv_value = calculate_irr_npv(cash_flows, rate_of_return)
         
+        # Calculate cumulative cash flow
+        cumulative_cash_flows = np.cumsum(cash_flows)
+        
         # Determine color based on values
         irr_color = "normal" if irr_value >= 0 else "inverse"
         npv_color = "normal" if npv_value >= 0 else "inverse"
@@ -46,8 +49,15 @@ def main():
             st.metric(label="Netto-Gegenwartswert (NPV)", value=f"CHF {npv_value:.2f}", delta=None, delta_color=npv_color)
         
         # Creating a plot using Plotly
-        fig = go.Figure(data=[go.Scatter(x=list(range(-1, time_period)), y=cash_flows, mode='lines+markers')])
-        fig.update_layout(title='Annual Cash Flow Over Time', xaxis_title='Years', yaxis_title='Cash Flow (€)')
+        fig = go.Figure()
+
+        # Plotting annual cash flow
+        fig.add_trace(go.Scatter(x=list(range(-1, time_period)), y=cash_flows, mode='lines+markers', name='Annual Cash Flow'))
+
+        # Plotting cumulative cash flow
+        fig.add_trace(go.Scatter(x=list(range(-1, time_period)), y=cumulative_cash_flows, mode='lines+markers', name='Cumulative Cash Flow'))
+
+        fig.update_layout(title='Annual and Cumulative Cash Flow Over Time', xaxis_title='Years', yaxis_title='Cash Flow (CHF)')
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.error("Bitte waehlen Sie einen Betrachtungszeitraum groesser als 0 Jahre.")
