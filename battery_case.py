@@ -20,6 +20,7 @@ def calculate_annual_cash_flow(j_return, battery_size, cost_per_kWh, time_period
     return cash_flows
 
 def main():
+    st.sidebar.image("MOTICS_LOGO-01.png", use_column_width=True)
     st.sidebar.title("Einstellungen")
     # Collecting user input from the sidebar 
     battery_size = st.sidebar.slider("Batteriegroesse (kWh)", 100, 1500, 800)
