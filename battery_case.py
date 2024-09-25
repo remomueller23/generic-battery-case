@@ -23,7 +23,7 @@ def main():
     st.sidebar.image("MOTICS_LOGO-01.png", use_column_width=True)
     st.sidebar.title("Einstellungen")
     # Collecting user input from the sidebar 
-    battery_size = st.sidebar.slider("Batteriegroesse (kWh)", 100, 1500, 800)
+    battery_size = st.sidebar.slider("Batteriegroesse (kWh)", 200, 8000, 800,200)
     c_rate = st.sidebar.slider("C-rate", 0.25, 1.5, 0.75, 0.25)
     invest_grid = st.sidebar.slider("Invest Netz", 0, 300000, 0, 10000)
     j_return = st.sidebar.slider("Return pro 100 kW (CHF)", 5000, 30000, 12500,2500)
